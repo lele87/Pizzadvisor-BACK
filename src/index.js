@@ -1,10 +1,5 @@
-const customError = (statusCode, customMessage, originalMessage = "") => {
-  const error = new Error(originalMessage);
-  error.statusCode = statusCode;
-  error.customMessage = customMessage;
-  error.originalMessage = originalMessage;
+const express = require("express");
 
-  return error;
-};
+const app = express();
 
-module.exports = customError;
+module.exports = app;

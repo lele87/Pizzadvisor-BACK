@@ -1,10 +1,19 @@
-const customError = (statusCode, customMessage, originalMessage = "") => {
-  const error = new Error(originalMessage);
-  error.statusCode = statusCode;
-  error.customMessage = customMessage;
-  error.originalMessage = originalMessage;
+require("dotenv").config();
+const debug = require("debug")("pizzadvisor:root");
 
-  return error;
-};
+const chalk = require("chalk");
+const connectDB = require("./database");
+const initializeServer = require("./server/initializeServer");
 
-module.exports = customError;
+const port = process.env.PORT ?? 4000;
+const connectionString = process.env.DATABASE_MONGO;
+
+(async () => {
+  try {
+    await connectDB(connectionString);
+    await initializeServer(port);
+  } catch {
+    debug(chalk.red("Exiting with errors"));
+    process.exit(1);
+  }
+})();

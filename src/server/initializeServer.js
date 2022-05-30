@@ -1,7 +1,7 @@
 require("dotenv").config();
 const debug = require("debug")("pizzadvisor:server:initializeServer");
 const chalk = require("chalk");
-const app = require("..");
+const app = require(".");
 
 const initializeServer = (port) =>
   new Promise((resolve, reject) => {

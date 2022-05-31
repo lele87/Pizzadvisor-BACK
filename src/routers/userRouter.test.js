@@ -27,7 +27,7 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-describe("Given a post /users/register endpoint", () => {
+describe("Given a post /user/register endpoint", () => {
   describe("When it receives a new user request", () => {
     test("Then it should respond with a 201 status code and a username", async () => {
       const response = await request(app)

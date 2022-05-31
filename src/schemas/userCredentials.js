@@ -17,4 +17,15 @@ const credentialsRegisterSchema = {
   }),
 };
 
-module.exports = credentialsRegisterSchema;
+const credentialsLoginSchema = {
+  body: Joi.object({
+    username: Joi.string()
+      .messages({ message: "A Username is Required" })
+      .required(),
+    password: Joi.string()
+      .messages({ message: "A Password is Required" })
+      .required(),
+  }),
+};
+
+module.exports = { credentialsRegisterSchema, credentialsLoginSchema };

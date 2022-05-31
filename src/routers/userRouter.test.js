@@ -27,7 +27,7 @@ afterAll(async () => {
   await mongoServer.stop();
 });
 
-describe("Given a post /users/register endpoint", () => {
+describe("Given a post /user/register endpoint", () => {
   describe("When it receives a new user request", () => {
     test("Then it should respond with a 201 status code and a username", async () => {
       const response = await request(app)
@@ -55,6 +55,38 @@ describe("Given a post /users/register endpoint", () => {
         .expect(409);
 
       expect(response.body.error).toBe(true);
+    });
+  });
+});
+
+describe("Given a user/login endpoint", () => {
+  describe("When it receives a request with a user present in the database", () => {
+    test("Then it should respond with a 200 status code and a token", async () => {
+      const user = {
+        username: "lelo",
+        password: "lelo",
+      };
+
+      const {
+        body: { token },
+      } = await request(app).post("/user/login").send(user).expect(200);
+
+      expect(token).not.toBeNull();
+    });
+  });
+  describe("When it receives a request with a user present not present in the database", () => {
+    test("Then it should respond with a 403 status code", async () => {
+      const user = {
+        username: "lelo",
+        password: "lillo",
+      };
+
+      const { token } = await request(app)
+        .post("/user/login")
+        .send(user)
+        .expect(403);
+
+      expect(token).toBeUndefined();
     });
   });
 });

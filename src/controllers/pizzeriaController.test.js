@@ -1,6 +1,6 @@
 const Pizzeria = require("../database/models/Pizzeria");
 const mockPizzerias = require("../mocks/pizzeriasMock");
-const getPizzerias = require("./pizzeriaControllers");
+const { getPizzerias } = require("./pizzeriaControllers");
 
 describe("Given a getPizzerias controller", () => {
   describe("When it is called on", () => {

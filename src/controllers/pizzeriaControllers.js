@@ -16,4 +16,12 @@ const getPizzerias = async (req, res, next) => {
   res.status(200).json(pizzerias);
 };
 
-module.exports = getPizzerias;
+const deletePizzeria = async (req, res) => {
+  debug(chalk.yellow("Request to delete a pizzeria"));
+  const { idPizzeria } = req.params;
+
+  await Pizzeria.findByIdAndDelete(idPizzeria);
+  res.status(200).json({ msg: `Pizzeria with ID ${idPizzeria} deleted` });
+};
+
+module.exports = { getPizzerias, deletePizzeria };

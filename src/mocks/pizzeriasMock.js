@@ -6,6 +6,7 @@ const mockPizzerias = [
     image: "image",
     owner: "629684abc46cf477e7ca7009",
     specialty: ["Margherita", "Marinara", "Olives"],
+    id: "1",
   },
   {
     name: "Pizza Circus",
@@ -14,6 +15,7 @@ const mockPizzerias = [
     image: "image1",
     owner: "629684abc46cf477e7ca7008",
     specialty: ["Margherita", "Marinara", "Capricciosa"],
+    id: "2",
   },
 ];
 

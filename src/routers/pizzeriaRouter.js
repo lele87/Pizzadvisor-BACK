@@ -7,6 +7,6 @@ const {
 const pizzeriaRouter = express.Router();
 
 pizzeriaRouter.get("/list", getPizzerias);
-pizzeriaRouter.delete("/:id", deletePizzeria);
+pizzeriaRouter.delete("/delete", deletePizzeria);
 
 module.exports = pizzeriaRouter;

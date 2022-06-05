@@ -16,7 +16,7 @@ const getPizzerias = async (req, res, next) => {
     next(error);
     return;
   }
-  res.status(200).json(pizzerias);
+  res.status(200).json({ pizzerias });
 };
 
 const deletePizzeria = async (req, res) => {

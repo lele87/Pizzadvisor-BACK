@@ -16,6 +16,7 @@ describe("Given a getPizzerias controller", () => {
   describe("When it is called on", () => {
     test("Then it should call the response method with a 200 and a json method with a list of pizzerias", async () => {
       const expectedStatus = 200;
+      const expectedJson = { pizzerias: mockPizzerias };
 
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -27,7 +28,7 @@ describe("Given a getPizzerias controller", () => {
       await getPizzerias(null, res, null);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
-      expect(res.json).toHaveBeenCalledWith(mockPizzerias);
+      expect(res.json).toHaveBeenCalledWith(expectedJson);
     });
   });
   describe("When it's called on but there aren't pizzerias", () => {

@@ -8,7 +8,7 @@ const {
 } = require("../controllers/pizzeriaControllers");
 
 const upload = multer({
-  dest: path.join("uploads", "images"),
+  dest: path.join("uploads", "pizzerias"),
 });
 
 const pizzeriaRouter = express.Router();

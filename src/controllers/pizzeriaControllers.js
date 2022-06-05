@@ -4,7 +4,6 @@ const chalk = require("chalk");
 const fs = require("fs");
 const path = require("path");
 const customError = require("../utils/customError");
-const User = require("../database/models/User");
 const Pizzeria = require("../database/models/Pizzeria");
 
 const getPizzerias = async (req, res, next) => {
@@ -29,14 +28,14 @@ const deletePizzeria = async (req, res) => {
 };
 
 const createPizzeria = async (req, res, next) => {
-  const { name, address, timetable } = req.body;
+  const { name, address, timetable, specialty } = req.body;
   const { file } = req;
 
   const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
   try {
     fs.rename(
-      path.join("uploads", "images", file.filename),
-      path.join("uploads", "images", newPizzeriaFileName),
+      path.join("uploads", "pizzerias", file.filename),
+      path.join("uploads", "pizzerias", newPizzeriaFileName),
       async (error) => {
         if (error) {
           next(error);
@@ -48,10 +47,11 @@ const createPizzeria = async (req, res, next) => {
       name,
       address,
       timetable,
-      image: file ? newPizzeriaFileName : "",
+      specialty,
+      image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
     });
-    debug(chalk.redBright("Pizzeria added to database"));
 
+    debug(chalk.redBright("Pizzeria added to database"));
     res.status(201).json(newPizzeria);
   } catch {
     const error = customError(400, "Bad Request", "Error creating pizzeria");

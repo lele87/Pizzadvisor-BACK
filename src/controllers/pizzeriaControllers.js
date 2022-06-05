@@ -28,7 +28,7 @@ const deletePizzeria = async (req, res) => {
 };
 
 const createPizzeria = async (req, res, next) => {
-  const { name, address, timetable, specialty } = req.body;
+  const { pizzeria } = req.body;
   const { file } = req;
 
   const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
@@ -44,10 +44,7 @@ const createPizzeria = async (req, res, next) => {
     );
 
     const newPizzeria = await Pizzeria.create({
-      name,
-      address,
-      timetable,
-      specialty,
+      ...pizzeria,
       image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
     });
 

@@ -9,6 +9,9 @@ const {
 
 const upload = multer({
   dest: path.join("uploads", "pizzerias"),
+  limits: {
+    fileSize: 8000000,
+  },
 });
 
 const pizzeriaRouter = express.Router();

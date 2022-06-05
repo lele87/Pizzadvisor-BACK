@@ -1,6 +1,10 @@
 require("dotenv").config();
 const debug = require("debug")("pizzadvisor:controllers:pizzeriaControllers");
 const chalk = require("chalk");
+const fs = require("fs");
+const path = require("path");
+const customError = require("../utils/customError");
+const User = require("../database/models/User");
 const Pizzeria = require("../database/models/Pizzeria");
 
 const getPizzerias = async (req, res, next) => {
@@ -24,4 +28,36 @@ const deletePizzeria = async (req, res) => {
   res.status(200).json({ msg: `Pizzeria with ID ${idPizzeria} deleted` });
 };
 
-module.exports = { getPizzerias, deletePizzeria };
+const createPizzeria = async (req, res, next) => {
+  const { name, address, timetable } = req.body;
+  const { file } = req;
+
+  const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
+  try {
+    fs.rename(
+      path.join("uploads", "images", file.filename),
+      path.join("uploads", "images", newPizzeriaFileName),
+      async (error) => {
+        if (error) {
+          next(error);
+        }
+      }
+    );
+
+    const newPizzeria = await Pizzeria.create({
+      name,
+      address,
+      timetable,
+      image: file ? newPizzeriaFileName : "",
+    });
+    debug(chalk.redBright("Pizzeria added to database"));
+
+    res.status(201).json(newPizzeria);
+  } catch {
+    const error = customError(400, "Bad Request", "Error creating pizzeria");
+
+    next(error);
+  }
+};
+
+module.exports = { getPizzerias, deletePizzeria, createPizzeria };

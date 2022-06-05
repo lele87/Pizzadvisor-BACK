@@ -5,7 +5,6 @@ const userRouter = require("../routers/userRouter");
 const { notFoundError, generalError } = require("./middlewares/errors");
 const corsOptions = require("../utils/corsOptions");
 const pizzeriaRouter = require("../routers/pizzeriaRouter");
-const auth = require("./middlewares/auth");
 
 const app = express();
 
@@ -16,7 +15,7 @@ app.use(express.static("uploads"));
 app.use(express.json());
 
 app.use("/user", userRouter);
-app.use("/pizzerias", auth, pizzeriaRouter);
+app.use("/pizzerias", pizzeriaRouter);
 
 app.use(notFoundError);
 app.use(generalError);

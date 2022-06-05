@@ -42,18 +42,21 @@ afterAll(async () => {
 describe("Given a GET '/pizzerias' endpoint", () => {
   describe("When it receives a request", () => {
     test("Then it should receive a list of pizzerias", async () => {
+      const expectedLength = 2;
+
       await request(app).post("/user/register").send(newUserData);
 
       const { body: tokenObject } = await request(app)
         .post("/user/login")
         .send(newUserCredentials);
 
-      const { body } = await request(app)
+      const {
+        body: { pizzerias },
+      } = await request(app)
         .get("/pizzerias/list")
         .set("Authorization", `Bearer ${tokenObject.token}`);
 
-      expect(body[0]).toHaveProperty("name", "Pizza Pazza");
-      expect(body[1]).toHaveProperty("name", "Pizza Circus");
+      expect(pizzerias).toHaveLength(expectedLength);
     });
   });
 

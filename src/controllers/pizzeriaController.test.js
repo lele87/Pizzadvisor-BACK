@@ -112,7 +112,7 @@ describe("Given a createPizzeria controller", () => {
     });
   });
   describe("When it's invoked but there is an error", () => {
-    test("Then it should call the response's method with a 400 and a json message 'Bad request", async () => {
+    test("Then it should call the response's method with a 400 and a json message 'Error creating pizzeria", async () => {
       const expectedErrorMessage = "Error creating pizzeria";
       const expectedError = new Error(expectedErrorMessage);
 
@@ -120,9 +120,18 @@ describe("Given a createPizzeria controller", () => {
 
       const next = jest.fn();
 
-      await createPizzeria(req, res, next);
+      await createPizzeria(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+  describe("When it's invoked and the file fails to rename", () => {
+    test("Then it should call the next funcion", async () => {
+      const next = jest.fn();
+
+      await createPizzeria(req, null, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });

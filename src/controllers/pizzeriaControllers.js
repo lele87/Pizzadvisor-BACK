@@ -32,6 +32,7 @@ const createPizzeria = async (req, res, next) => {
   const { file } = req;
 
   const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
+
   try {
     fs.rename(
       path.join("uploads", "pizzerias", file.filename),

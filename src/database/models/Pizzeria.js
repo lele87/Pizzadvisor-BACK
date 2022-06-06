@@ -24,7 +24,7 @@ const PizzeriaSchema = new Schema({
     ref: "User",
   },
   specialty: {
-    type: Array,
+    type: String,
   },
 });
 

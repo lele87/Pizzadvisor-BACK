@@ -28,7 +28,7 @@ const deletePizzeria = async (req, res) => {
 };
 
 const createPizzeria = async (req, res, next) => {
-  const { pizzeria } = req.body;
+  const { name, address, timetable, specialty } = req.body;
   const { file } = req;
 
   const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
@@ -45,12 +45,15 @@ const createPizzeria = async (req, res, next) => {
     );
 
     const newPizzeria = await Pizzeria.create({
-      ...pizzeria,
+      name,
+      address,
+      timetable,
+      specialty,
       image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
     });
 
     debug(chalk.redBright("Pizzeria added to database"));
-    res.status(201).json(newPizzeria);
+    res.status(201).json({ newPizzeria });
   } catch {
     const error = customError(400, "Bad Request", "Error creating pizzeria");
 

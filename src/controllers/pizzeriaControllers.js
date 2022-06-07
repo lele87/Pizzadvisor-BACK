@@ -64,6 +64,7 @@ const createPizzeria = async (req, res, next) => {
 
 const editPizzeria = async (req, res, next) => {
   debug(chalk.yellow("Request to edit a pizzeria"));
+
   const { idPizzeria } = req.params;
   const { name, address, timetable, specialty, owner } = req.body;
   const { file } = req;

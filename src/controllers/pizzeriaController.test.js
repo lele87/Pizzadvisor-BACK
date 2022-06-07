@@ -5,6 +5,7 @@ const {
   getPizzerias,
   deletePizzeria,
   createPizzeria,
+  editPizzeria,
 } = require("./pizzeriaControllers");
 
 jest.mock("fs", () => ({
@@ -134,6 +135,60 @@ describe("Given a createPizzeria controller", () => {
       await createPizzeria(req, null, next);
 
       expect(next).toHaveBeenCalled();
+    });
+  });
+});
+
+describe("Given an editPizzeria Controller", () => {
+  const req = {
+    params: {
+      idPizzeria: "1",
+    },
+    body: mockPizzerias[0],
+    file: {
+      filename: "12798217782",
+      originalname: "image.jpg",
+    },
+  };
+
+  const res = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+  };
+
+  jest
+    .spyOn(path, "join")
+    .mockResolvedValueOnce("image")
+    .mockReturnValueOnce(true)
+    .mockResolvedValue(new Error());
+
+  describe("When it's invoked with the info to update", () => {
+    test("Then it should call the response's method with a 201 and a json message with the updated Pizzeria", async () => {
+      const expectedStatus = 201;
+
+      Pizzeria.findByIdAndUpdate = jest.fn().mockReturnValue(mockPizzerias[0]);
+      const expectedResponse = { updatedPizzeria: mockPizzerias[0] };
+
+      await editPizzeria(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith(expectedResponse);
+    });
+  });
+  describe("When it receives a request with a pizzeria id not present in the db", () => {
+    test("Then it should call the next received function with an error 'Error updating pizzeria'", async () => {
+      const expectedErrorMessage = "Error updating pizzeria";
+      const expectedError = new Error(expectedErrorMessage);
+
+      const next = jest.fn();
+
+      jest.spyOn(path, "join").mockResolvedValue("image");
+
+      Pizzeria.findByIdAndUpdate = jest.fn().mockRejectedValue();
+
+      await editPizzeria(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

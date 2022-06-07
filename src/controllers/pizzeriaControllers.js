@@ -28,7 +28,7 @@ const deletePizzeria = async (req, res) => {
 };
 
 const createPizzeria = async (req, res, next) => {
-  const { name, address, timetable, specialty } = req.body;
+  const { name, address, timetable, specialty, owner } = req.body;
   const { file } = req;
 
   const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
@@ -49,6 +49,7 @@ const createPizzeria = async (req, res, next) => {
       address,
       timetable,
       specialty,
+      owner,
       image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
     });
 
@@ -61,4 +62,50 @@ const createPizzeria = async (req, res, next) => {
   }
 };
 
-module.exports = { getPizzerias, deletePizzeria, createPizzeria };
+const editPizzeria = async (req, res, next) => {
+  debug(chalk.yellow("Request to edit a pizzeria"));
+  const { idPizzeria } = req.params;
+  const { name, address, timetable, specialty, owner } = req.body;
+  const { file } = req;
+
+  const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
+
+  try {
+    fs.rename(
+      path.join("uploads", "pizzerias", file.filename),
+      path.join("uploads", "pizzerias", newPizzeriaFileName),
+      async (error) => {
+        if (error) {
+          next(error);
+        }
+      }
+    );
+
+    const updatedPizzeria = await Pizzeria.findByIdAndUpdate(
+      idPizzeria,
+      {
+        name,
+        address,
+        timetable,
+        specialty,
+        owner,
+        image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (updatedPizzeria) {
+      debug(chalk.greenBright("Pizzeria updated"));
+    }
+
+    res.status(201).json({ updatedPizzeria });
+  } catch {
+    const error = customError(400, "Bad Request", "Error updating pizzeria");
+
+    next(error);
+  }
+};
+
+module.exports = { getPizzerias, deletePizzeria, createPizzeria, editPizzeria };

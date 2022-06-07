@@ -6,6 +6,7 @@ const {
   getPizzerias,
   deletePizzeria,
   createPizzeria,
+  editPizzeria,
 } = require("../controllers/pizzeriaControllers");
 const auth = require("../server/middlewares/auth");
 
@@ -21,5 +22,6 @@ const pizzeriaRouter = express.Router();
 pizzeriaRouter.get("/list", auth, getPizzerias);
 pizzeriaRouter.delete("/:idPizzeria", deletePizzeria);
 pizzeriaRouter.post("/", upload.single("image"), createPizzeria);
+pizzeriaRouter.patch("/:idPizzeria", upload.single("image"), editPizzeria);
 
 module.exports = pizzeriaRouter;

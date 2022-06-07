@@ -44,6 +44,7 @@ const userLogin = async (req, res, next) => {
   const userData = {
     username: user.username,
     name: user.name,
+    id: user.id,
   };
 
   const rightPassword = await bcrypt.compare(password, user.password);

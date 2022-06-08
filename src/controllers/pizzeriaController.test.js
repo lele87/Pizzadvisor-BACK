@@ -6,6 +6,7 @@ const {
   deletePizzeria,
   createPizzeria,
   editPizzeria,
+  getPizzeria,
 } = require("./pizzeriaControllers");
 
 jest.mock("fs", () => ({
@@ -189,6 +190,45 @@ describe("Given an editPizzeria Controller", () => {
       await editPizzeria(req, null, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a getPizzeria controller", () => {
+  describe("When invoked with a request with the id of the first Pizzeria in MockPizzerias", () => {
+    test("Then it should call the response's status method with 200, and json with the first pizzeria in mockPizzerias", async () => {
+      const req = {
+        params: { id: mockPizzerias[0].id },
+      };
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      Pizzeria.findById = jest.fn().mockResolvedValue(mockPizzerias[0]);
+
+      await getPizzeria(req, res, null);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(mockPizzerias[0]);
+    });
+  });
+  describe("When its invoked with a non existent id", () => {
+    test("Then it should call the received next function", async () => {
+      const req = {
+        params: { idPizzeria: "345" },
+      };
+
+      const next = jest.fn();
+
+      Pizzeria.findById = jest
+        .fn()
+        .mockRejectedValue(new Error("Pizzeria not found"));
+
+      await getPizzeria(req, null, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });

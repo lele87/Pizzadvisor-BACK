@@ -7,6 +7,7 @@ const {
   deletePizzeria,
   createPizzeria,
   editPizzeria,
+  getPizzeria,
 } = require("../controllers/pizzeriaControllers");
 const auth = require("../server/middlewares/auth");
 
@@ -23,5 +24,6 @@ pizzeriaRouter.get("/list", auth, getPizzerias);
 pizzeriaRouter.delete("/:idPizzeria", deletePizzeria);
 pizzeriaRouter.post("/", upload.single("image"), createPizzeria);
 pizzeriaRouter.patch("/:idPizzeria", upload.single("image"), editPizzeria);
+pizzeriaRouter.get("/:idPizzeria", getPizzeria);
 
 module.exports = pizzeriaRouter;

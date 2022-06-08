@@ -17,7 +17,9 @@ const PizzeriaSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
+  },
+  imageBackup: {
+    type: String,
   },
   owner: {
     type: Schema.Types.ObjectId,

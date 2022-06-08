@@ -65,33 +65,40 @@ const createPizzeria = async (req, res, next) => {
 const editPizzeria = async (req, res, next) => {
   debug(chalk.yellow("Request to edit a pizzeria"));
 
-  const { idPizzeria } = req.params;
-  const { name, address, timetable, specialty, owner } = req.body;
-  const { file } = req;
-
-  const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
-
   try {
-    fs.rename(
-      path.join("uploads", "pizzerias", file.filename),
-      path.join("uploads", "pizzerias", newPizzeriaFileName),
-      async (error) => {
-        if (error) {
-          next(error);
+    const { idPizzeria } = req.params;
+    const { name, address, timetable, specialty, owner } = req.body;
+    const { file } = req;
+
+    const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
+
+    if (typeof file !== "undefined") {
+      fs.rename(
+        path.join("uploads", "pizzerias", file.filename),
+        path.join("uploads", "pizzerias", newPizzeriaFileName),
+        async (error) => {
+          if (error) {
+            next(error);
+          }
         }
-      }
-    );
+      );
+    }
+
+    const pizzeriaOriginalImage = {
+      name,
+      address,
+      timetable,
+      specialty,
+      owner,
+    };
+
+    if (typeof file !== "undefined") {
+      pizzeriaOriginalImage.image = path.join("pizzerias", newPizzeriaFileName);
+    }
 
     const updatedPizzeria = await Pizzeria.findByIdAndUpdate(
       idPizzeria,
-      {
-        name,
-        address,
-        timetable,
-        specialty,
-        owner,
-        image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
-      },
+      pizzeriaOriginalImage,
       {
         new: true,
       }
@@ -109,4 +116,24 @@ const editPizzeria = async (req, res, next) => {
   }
 };
 
-module.exports = { getPizzerias, deletePizzeria, createPizzeria, editPizzeria };
+const getPizzeria = async (req, res, next) => {
+  const { idPizzeria } = req.params;
+  try {
+    const pizzeria = await Pizzeria.findById(idPizzeria);
+    debug(
+      chalk.yellowBright(`New pizzeria request, id requested:${idPizzeria}`)
+    );
+    res.status(200).json(pizzeria);
+  } catch {
+    const error = customError(404, "Bad request", "Pizzeria not found");
+    next(error);
+  }
+};
+
+module.exports = {
+  getPizzerias,
+  deletePizzeria,
+  createPizzeria,
+  editPizzeria,
+  getPizzeria,
+};

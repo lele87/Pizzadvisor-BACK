@@ -1,7 +1,6 @@
 require("dotenv").config();
 const debug = require("debug")("pizzadvisor:controllers:pizzeriaControllers");
 const chalk = require("chalk");
-const fs = require("fs");
 const path = require("path");
 const customError = require("../utils/customError");
 const Pizzeria = require("../database/models/Pizzeria");
@@ -28,21 +27,10 @@ const deletePizzeria = async (req, res) => {
 };
 
 const createPizzeria = async (req, res, next) => {
-  const { name, address, timetable, specialty, owner } = req.body;
-  const { file } = req;
-
-  const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
-
   try {
-    fs.rename(
-      path.join("uploads", "pizzerias", file.filename),
-      path.join("uploads", "pizzerias", newPizzeriaFileName),
-      async (error) => {
-        if (error) {
-          next(error);
-        }
-      }
-    );
+    const { name, address, timetable, specialty, owner } = req.body;
+    const { file } = req;
+    const { firebaseFileURL, newImageName } = req;
 
     const newPizzeria = await Pizzeria.create({
       name,
@@ -50,7 +38,8 @@ const createPizzeria = async (req, res, next) => {
       timetable,
       specialty,
       owner,
-      image: file ? path.join("pizzerias", newPizzeriaFileName) : "",
+      image: file ? path.join("pizzerias", newImageName) : "",
+      imageBackup: file ? firebaseFileURL : "",
     });
 
     debug(chalk.redBright("Pizzeria added to database"));
@@ -69,20 +58,7 @@ const editPizzeria = async (req, res, next) => {
     const { idPizzeria } = req.params;
     const { name, address, timetable, specialty, owner } = req.body;
     const { file } = req;
-
-    const newPizzeriaFileName = file ? `${Date.now()}${file.originalname}` : "";
-
-    if (typeof file !== "undefined") {
-      fs.rename(
-        path.join("uploads", "pizzerias", file.filename),
-        path.join("uploads", "pizzerias", newPizzeriaFileName),
-        async (error) => {
-          if (error) {
-            next(error);
-          }
-        }
-      );
-    }
+    const { firebaseFileURL, newImageName } = req;
 
     const pizzeriaOriginalImage = {
       name,
@@ -90,11 +66,9 @@ const editPizzeria = async (req, res, next) => {
       timetable,
       specialty,
       owner,
+      image: file ? path.join("pizzerias", newImageName) : "",
+      imageBackup: file ? firebaseFileURL : "",
     };
-
-    if (typeof file !== "undefined") {
-      pizzeriaOriginalImage.image = path.join("pizzerias", newPizzeriaFileName);
-    }
 
     const updatedPizzeria = await Pizzeria.findByIdAndUpdate(
       idPizzeria,

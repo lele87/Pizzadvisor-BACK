@@ -10,6 +10,7 @@ const {
   getPizzeria,
 } = require("../controllers/pizzeriaControllers");
 const auth = require("../server/middlewares/auth");
+const imageConverter = require("../server/middlewares/imageConverter");
 
 const upload = multer({
   dest: path.join("uploads", "pizzerias"),
@@ -22,8 +23,18 @@ const pizzeriaRouter = express.Router();
 
 pizzeriaRouter.get("/list", auth, getPizzerias);
 pizzeriaRouter.delete("/:idPizzeria", deletePizzeria);
-pizzeriaRouter.post("/", upload.single("image"), createPizzeria);
-pizzeriaRouter.patch("/:idPizzeria", upload.single("image"), editPizzeria);
+pizzeriaRouter.post(
+  "/",
+  upload.single("image"),
+  imageConverter,
+  createPizzeria
+);
+pizzeriaRouter.patch(
+  "/:idPizzeria",
+  upload.single("image"),
+  imageConverter,
+  editPizzeria
+);
 pizzeriaRouter.get("/:idPizzeria", getPizzeria);
 
 module.exports = pizzeriaRouter;

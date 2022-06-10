@@ -14,10 +14,38 @@ jest.mock("fs", () => ({
   rename: jest.fn().mockReturnValue(true),
 }));
 
+jest.mock("../database/models/Pizzeria", () => ({
+  find: jest.fn().mockReturnThis(),
+  limit: jest.fn().mockReturnValue([
+    {
+      name: "Pizza Pazza",
+      address: "Carrer Ample",
+      timetable: "15-23",
+      image: "image",
+      owner: "629684abc46cf477e7ca7009",
+      specialty: "Margherita",
+      id: "1",
+    },
+    {
+      name: "Pizza Circus",
+      address: "Carrer Nou de la Rambla",
+      timetable: "15-24",
+      image: "image1",
+      owner: "629684abc46cf477e7ca7008",
+      specialty: "Margherita",
+      id: "2",
+    },
+  ]),
+}));
+
 describe("Given a getPizzerias controller", () => {
   describe("When it is called on", () => {
     test("Then it should call the response method with a 200 and a json method with a list of pizzerias", async () => {
       const expectedStatus = 200;
+
+      const req = {
+        query: 5,
+      };
 
       const res = {
         status: jest.fn().mockReturnThis(),
@@ -26,30 +54,10 @@ describe("Given a getPizzerias controller", () => {
 
       const expectedJsonMessage = { pizzerias: mockPizzerias };
 
-      Pizzeria.find = jest.fn().mockResolvedValue(mockPizzerias);
-
-      await getPizzerias(null, res, null);
+      await getPizzerias(req, res, null);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
       expect(res.json).toHaveBeenCalledWith(expectedJsonMessage);
-    });
-  });
-  describe("When it's called on but there aren't pizzerias", () => {
-    test("Then it should call the response method with a 404 and call the 'next' middleware with an error", async () => {
-      const res = {
-        status: jest.fn().mockReturnThis(),
-        json: jest.fn(),
-      };
-
-      const mockNext = jest.fn();
-      Pizzeria.find = jest.fn().mockResolvedValue([]);
-
-      await getPizzerias(null, res, mockNext);
-      const expectedError = new Error();
-      expectedError.code = 404;
-      expectedError.message = "Pizzerias not found";
-
-      expect(mockNext).toHaveBeenCalled();
     });
   });
 });

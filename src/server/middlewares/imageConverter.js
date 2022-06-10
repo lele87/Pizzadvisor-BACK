@@ -9,12 +9,12 @@ const {
 } = require("firebase/storage");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBV4Q6T-zM9b27LSU0g6N9eZ_jsxIQ7G4s",
-  authDomain: "recordswapp-e0444.firebaseapp.com",
-  projectId: "recordswapp-e0444",
-  storageBucket: "recordswapp-e0444.appspot.com",
-  messagingSenderId: "278703235740",
-  appId: "1:278703235740:web:5e56c5a900623921ba0359",
+  apiKey: "AIzaSyBcffgne_H-E6UMB2BYnfhojP9mWVLWYQA",
+  authDomain: "images-af588.firebaseapp.com",
+  projectId: "images-af588",
+  storageBucket: "images-af588.appspot.com",
+  messagingSenderId: "989226133051",
+  appId: "1:989226133051:web:25d56a56df180132c81e1e",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);

@@ -7,17 +7,23 @@ const Pizzeria = require("../database/models/Pizzeria");
 
 const getPizzerias = async (req, res, next) => {
   debug(chalk.yellowBright("New pizzeria's list request received"));
-  const { limit } = req.query;
+  try {
+    const { filter, limit } = req.query;
 
-  const pizzerias = await Pizzeria.find().limit(limit);
+    const pizzerias = filter
+      ? await Pizzeria.find({ specialty: filter }).limit(limit)
+      : await Pizzeria.find().limit(limit);
 
-  if (pizzerias.length === 0) {
-    const error = (404, "Pizzerias not found");
+    const count = filter
+      ? await Pizzeria.count({ specialty: filter })
+      : await Pizzeria.count().limit(limit);
 
+    const pages = Math.ceil(count / 5);
+
+    res.status(200).json({ pizzerias, pages });
+  } catch (error) {
     next(error);
-    return;
   }
-  res.status(200).json({ pizzerias });
 };
 
 const deletePizzeria = async (req, res) => {

@@ -16,6 +16,7 @@ jest.mock("fs", () => ({
 
 jest.mock("../database/models/Pizzeria", () => ({
   find: jest.fn().mockReturnThis(),
+  count: jest.fn().mockReturnValue(1),
   limit: jest.fn().mockReturnValue([
     {
       name: "Pizza Pazza",
@@ -44,7 +45,10 @@ describe("Given a getPizzerias controller", () => {
       const expectedStatus = 200;
 
       const req = {
-        query: 5,
+        query: {
+          limit: 5,
+          filter: "Margherita",
+        },
       };
 
       const res = {
@@ -52,9 +56,14 @@ describe("Given a getPizzerias controller", () => {
         json: jest.fn(),
       };
 
-      const expectedJsonMessage = { pizzerias: mockPizzerias };
+      const next = jest.fn();
 
-      await getPizzerias(req, res, null);
+      const expectedJsonMessage = {
+        pizzerias: mockPizzerias,
+        pages: 1,
+      };
+
+      await getPizzerias(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
       expect(res.json).toHaveBeenCalledWith(expectedJsonMessage);

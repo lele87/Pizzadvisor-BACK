@@ -16,8 +16,7 @@ const getPizzerias = async (req, res, next) => {
 
     const count = filter
       ? await Pizzeria.count({ specialty: filter })
-      : await Pizzeria.count().limit(limit);
-
+      : await Pizzeria.count();
     const pages = Math.ceil(count / 5);
 
     res.status(200).json({ pizzerias, pages });

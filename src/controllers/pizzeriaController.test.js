@@ -69,6 +69,22 @@ describe("Given a getPizzerias controller", () => {
       expect(res.json).toHaveBeenCalledWith(expectedJsonMessage);
     });
   });
+  describe("When it's invoked but there is an error", () => {
+    test("Then the next function should be called ", async () => {
+      const req = {
+        query: {
+          limit: 5,
+          filter: "Margherita",
+        },
+      };
+
+      const next = jest.fn();
+
+      await getPizzerias(req, null, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+  });
 });
 
 describe("Given a deletePizzeria controller", () => {

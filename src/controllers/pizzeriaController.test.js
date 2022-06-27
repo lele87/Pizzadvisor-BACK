@@ -40,7 +40,7 @@ jest.mock("../database/models/Pizzeria", () => ({
 }));
 
 describe("Given a getPizzerias controller", () => {
-  describe("When it is called on", () => {
+  describe("When it's called on", () => {
     test("Then it should call the response method with a 200 and a json method with a list of pizzerias", async () => {
       const expectedStatus = 200;
 

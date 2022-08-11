@@ -4,6 +4,7 @@ const corsOptions = {
     "http://localhost:3000",
     "http://localhost:4000",
     "https://pizzadvisor.netlify.app/",
+    "https://pizzadvisor.netlify.app",
   ],
 };
 

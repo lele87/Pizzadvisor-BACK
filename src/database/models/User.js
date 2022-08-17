@@ -14,6 +14,15 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  favourites: {
+    pizzerias: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Pizzeria",
+        default: [],
+      },
+    ],
+  },
 });
 const User = model("User", UserSchema, "users");
 module.exports = User;

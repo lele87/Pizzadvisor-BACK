@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const userRouter = require("../routers/userRouter");
 const { notFoundError, generalError } = require("./middlewares/errors");
 const pizzeriaRouter = require("../routers/pizzeriaRouter");
+const usersRouter = require("../routers/usersRouter");
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.static("uploads"));
 app.use(express.json());
 
 app.use("/user", userRouter);
+app.use("/users", usersRouter);
 app.use("/pizzerias", pizzeriaRouter);
 
 app.use(notFoundError);

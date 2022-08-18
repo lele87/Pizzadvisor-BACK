@@ -22,7 +22,6 @@ const upload = multer({
 const pizzeriaRouter = express.Router();
 
 pizzeriaRouter.get("/list", auth, getPizzerias);
-pizzeriaRouter.delete("/:idPizzeria", deletePizzeria);
 pizzeriaRouter.post(
   "/",
   upload.single("image"),
@@ -35,6 +34,7 @@ pizzeriaRouter.patch(
   imageConverter,
   editPizzeria
 );
+pizzeriaRouter.delete("/:idPizzeria", deletePizzeria);
 pizzeriaRouter.get("/:idPizzeria", getPizzeria);
 
 module.exports = pizzeriaRouter;
